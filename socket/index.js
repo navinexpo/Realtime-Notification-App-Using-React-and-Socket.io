@@ -27,12 +27,20 @@ io.on("connection", (socket) => {
   });
 
   socket.on("sendNotification", ({ senderName, receiverName, type }) => {
+    if (!senderName || !receiverName || !type) {
+        console.error('Missing required parameters: senderName, receiverName, type');
+        return;
+    }
     const receiver = getUser(receiverName);
+    if (!receiver) {
+        console.error(`No user found with the name ${receiverName}`);
+        return;
+    }
     io.to(receiver.socketId).emit("getNotification", {
       senderName,
       type,
     });
-  });
+});
 
   socket.on("disconnect", () => {
     // console.log("someone has left");

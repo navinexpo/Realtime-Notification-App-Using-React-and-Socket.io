@@ -15,6 +15,21 @@ const Navbar = ({ socket }) => {
 
   console.log(notifications);
 
+  const displayNotification = ({ senderName, type }) => {
+    let action;
+
+    if (type === 1) {
+      action = "liked";
+    } else if (type === 2) {
+      action = "commented";
+    } else {
+      action = "shared";
+    }
+    return (
+      <span className="notification">{`${senderName} ${action} your post`}</span>
+    );
+  };
+
   return (
     <div className="navbar">
       <span className="logo">Navin's App</span>
@@ -35,9 +50,7 @@ const Navbar = ({ socket }) => {
         </div>
       </div>
       <div className="notifications">
-        {
-          notifications.map()
-        }
+        {notifications.map((n) => displayNotification(n))}
       </div>
     </div>
   );
