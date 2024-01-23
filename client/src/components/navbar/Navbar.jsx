@@ -6,6 +6,7 @@ import { GrSettingsOption } from "react-icons/gr";
 
 const Navbar = ({ socket }) => {
   const [notifications, setNotifications] = useState([]);
+  const [open, setOpen] = useState(false);
 
   useEffect(() => {
     socket.on("getNotification", (data) => {
@@ -14,6 +15,11 @@ const Navbar = ({ socket }) => {
   }, [socket]);
 
   console.log(notifications);
+
+  const handleRead = () => {  
+    setNotifications([])
+    setOpen(false)
+  }
 
   const displayNotification = ({ senderName, type }) => {
     let action;
@@ -34,24 +40,33 @@ const Navbar = ({ socket }) => {
     <div className="navbar">
       <span className="logo">Navin's App</span>
       <div className="icons">
-        <div className="icon">
+        <div className="icon" onClick={() => setOpen(!open)}>
           <MdOutlineNotificationAdd />
-          <div className="counter">2</div>
+          {/* <div className="counter">2</div> */}
+          {
+            notifications.length > 0 &&
+          <div className="counter">{notifications.length}</div>
+          }
         </div>
 
-        <div className="icon">
+        <div className="icon" onClick={() => setOpen(!open)}>
           <LuMessageSquareDashed />
-          <div className="counter">2</div>
+          {/* <div className="counter">2</div> */}
+          <div className="counter">{notifications.length}</div>
         </div>
 
-        <div className="icon">
+        <div className="icon" onClick={() => setOpen(!open)}>
           <GrSettingsOption />
-          <div className="counter">2</div>
+          {/* <div className="counter">2</div> */}
+          <div className="counter">{notifications.length}</div>
         </div>
       </div>
-      <div className="notifications">
-        {notifications.map((n) => displayNotification(n))}
-      </div>
+      {open && (
+        <div className="notifications">
+          {notifications.map((n) => displayNotification(n))}
+          <button className="nbutton" onClick={handleRead}>Mark as Red</button>
+        </div>
+      )}
     </div>
   );
 };
